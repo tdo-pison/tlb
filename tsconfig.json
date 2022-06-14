@@ -70,5 +70,8 @@
     "skipLibCheck": true
   },
   "include": ["src/"],
-  "compileOnSave": false
+  "compileOnSave": false,
+  "types": [
+    "marked"
+  ]
 }
