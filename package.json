@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "task list bot",
-  "author": "Tony Do <tonyttdo@gmail.com>",
+  "author": "Tony Do <tony.do@pison.com>",
   "license": "ISC",
-  "homepage": "https://github.com/tonyage/tlb",
+  "homepage": "https://github.com/tdo-pison/tlb",
   "keywords": [
     "probot",
     "github",
