@@ -7,9 +7,19 @@
 ```sh
 # Install dependencies
 npm install
+yarn install
+
+# if you use yarn
+
+# build step because TypeScript
+npm build
+yarn build
+
+
 
 # Run the bot
 npm start
+yarn start
 ```
 
 ## Docker
