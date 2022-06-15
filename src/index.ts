@@ -16,9 +16,7 @@ export = (app: Probot) => {
     "pull_request_review_comment",
   ], async context => {
     let pr = context.payload.pull_request;
-
     let tasks = check(pr.body)
-    
     let status = {
       name: 'tlb',
       head_branch: "",

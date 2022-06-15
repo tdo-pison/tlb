@@ -1,14 +1,21 @@
 import { marked } from 'marked';
+
+type Result = {
+  total: number;
+  remaining: number;
+}
  
 export = function(body: string) {
+  let result: Result = {
+    total: 0,
+    remaining: 0,
+  }
   if (body === null) {
-    return { total: 0, remaining: 0 };
+    return result
   }
 
   let regex: RegExp = new RegExp('\<\!\-\-(?:.|\n|\r)*?-->', 'g');
-
   let tokens: marked.TokensList = marked.lexer(body, { gfm: true });
-
   let allTokens = tokens.flatMap(function mapper(token: marked.Token): any {
     let t = token as marked.Tokens.ListItem 
     let l = token as marked.Tokens.List
@@ -20,9 +27,16 @@ export = function(body: string) {
 
   let items: marked.Tokens.ListItem[] = allTokens.filter(token => token.type === 'list_item');
   let optional = items.filter(item => item.text.match(regex));
-  console.log(optional.length)
-  return {
+
+  result = {
     total: items.filter(item => item.checked !== undefined).length - optional.length,
     remaining: items.filter(item => item.checked === false).length - optional.length
   };
+
+  return result
+
+  // return {
+  //   total: items.filter(item => item.checked !== undefined).length - optional.length,
+  //   remaining: items.filter(item => item.checked === false).length - optional.length
+  // };
 };
