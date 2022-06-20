@@ -1,0 +1,14 @@
+version: 2
+mergeable:
+  - when: pull_request.opened
+    name: "Label notice"
+    validate:
+      - do: label
+        must_include:
+          regex: bug|enhancement|documentation
+    fail:
+      - do: comment
+        payload:
+          body: > 
+            - Be sure to label this PR accordingly as either `bug`,
+            - `enhancement`, or `documentation`
