@@ -10,5 +10,13 @@ mergeable:
       - do: comment
         payload:
           body: > 
-            - Be sure to label this PR accordingly as either `bug`,
+            - Be sure to label this PR accordingly with at least `bug`,
             - `enhancement`, or `documentation`
+  - when: pull_request.opened
+    name: "Branch naming convention"
+    validate:
+      - do: headRef
+        must_include:
+          regex: '^(feature|hotfix|bugfix)\/([A-Za-z])+-\d.+$'
+          message: |
+            Your branch doesn't adhere to the branch naming convention as described in the SDLC <a href=https://docs.google.com/document/d/13DBQuZYshTm2YwKORAwWGIEHdhcjVeivTVT-zaxaF70/edit>doc</a>!k.

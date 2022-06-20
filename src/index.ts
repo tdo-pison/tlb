@@ -16,15 +16,19 @@ export = (app: Probot) => {
     "pull_request_review_comment",
   ], async context => {
     let pr = context.payload.pull_request;
-    let tasks = check(pr.body)
+    let tasks = check(pr.body);
+
     let status = {
-      name: 'tlb',
+      name: "tlb",
       head_branch: "",
       head_sha: pr.head.sha,
-      status: 'pending',
+      started_at: (new Date).toISOString(),
+      completed_at: (new Date).toISOString(),
+      conclusion: "action_required",
+      status: "in_progress",
       output: {
         title: (tasks.total - tasks.remaining) + " / " + tasks.total + " completed",
-        summary: tasks.remaining + ' task' + (tasks.remaining > 1 ? 's' : '') + " left",
+        summary: tasks.remaining + " task" + (tasks.remaining > 1 ? "s" : "") + " left",
         text: "Checking if any tasks need to be completed before merging."
       },
       request: {
@@ -32,6 +36,13 @@ export = (app: Probot) => {
         retryAfter: 3
       },
     } 
+
+    if (tasks.remaining === 0) {
+      status.status = "completed";
+      status.conclusion = "success";
+      status.completed_at = (new Date).toISOString();
+      status.output.summary = "Tasks completed";
+    }
 
     return context.octokit.checks.create(context.repo(status))
   });

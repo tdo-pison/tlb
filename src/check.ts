@@ -15,6 +15,7 @@ export = function(body: string) {
   }
 
   let regex: RegExp = new RegExp('\<\!\-\-(?:.|\n|\r)*?-->', 'g');
+
   let tokens: marked.TokensList = marked.lexer(body, { gfm: true });
   let allTokens = tokens.flatMap(function mapper(token: marked.Token): any {
     let t = token as marked.Tokens.ListItem 
@@ -34,9 +35,4 @@ export = function(body: string) {
   };
 
   return result
-
-  // return {
-  //   total: items.filter(item => item.checked !== undefined).length - optional.length,
-  //   remaining: items.filter(item => item.checked === false).length - optional.length
-  // };
 };
