@@ -1,7 +1,7 @@
 version: 2
 mergeable:
   - when: pull_request.opened
-    name: "Label notice"
+    name: "Label notice (QoL for PR filtering)"
     validate:
       - do: label
         must_include:
@@ -13,10 +13,36 @@ mergeable:
             - Be sure to label this PR accordingly with at least `bug`,
             - `enhancement`, or `documentation`
   - when: pull_request.opened
-    name: "Branch naming convention"
+    name: "Branch naming convention check (Jira ticket prefix)"
     validate:
       - do: headRef
         must_include:
           regex: '^(feature|hotfix|bugfix)\/([A-Za-z])+-\d.+$'
-          message: |
-            Your branch doesn't adhere to the branch naming convention as described in the SDLC <a href=https://docs.google.com/document/d/13DBQuZYshTm2YwKORAwWGIEHdhcjVeivTVT-zaxaF70/edit>doc</a>!k.
+    fail:
+      - do: comment
+        payload:
+          body: >
+            - Your branch doesn't adhere to the branch naming convention as described in the SDLC
+            - <a href=https://docs.google.com/document/d/13DBQuZYshTm2YwKORAwWGIEHdhcjVeivTVT-zaxaF70/edit>doc</a>!k.
+  - when: pull_request.opened
+    name: "Commit naming convention check (Jira ticket prefix)"
+    validate:
+      - do: headRef
+        must_include:
+          regex: '^([A-Za-z])+-\d.+$'
+    fail:
+      - do: comment
+        payload:
+          body: >
+            - Your commit doesn't adhere to the commit naming convention as described in the SDLC
+            - <a href=https://docs.google.com/document/d/13DBQuZYshTm2YwKORAwWGIEHdhcjVeivTVT-zaxaF70/edit>doc</a>!k.
+            - prefix each commit with relevant Jira ticket you can rebase your commit messages and force push to fix this
+  - when: pull_request.opened
+    name: "Request for review if not WIP PR"
+    validate:
+      - do: title
+        must_exclude:
+          regex: ^\[WIP\]
+    pass:
+      - do: request_review
+        teams: ['Android']
