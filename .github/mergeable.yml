@@ -9,9 +9,8 @@ mergeable:
     fail:
       - do: comment
         payload:
-          body: > 
-            - Be sure to label this PR accordingly with at least `bug`,
-            - `enhancement`, or `documentation`
+          body:
+            - Be sure to label this PR accordingly with at least `bug`, `enhancement`, or `documentation`
   - when: pull_request.opened
     name: "Branch naming convention check (Jira ticket prefix)"
     validate:
@@ -22,8 +21,8 @@ mergeable:
       - do: comment
         payload:
           body: >
-            - Your branch doesn't adhere to the branch naming convention as described in the SDLC
-            - <a href=https://docs.google.com/document/d/13DBQuZYshTm2YwKORAwWGIEHdhcjVeivTVT-zaxaF70/edit>doc</a>!k.
+            <h2>Your branch doesn't adhere to the branch naming convention as described in the
+            SDLC <a href=https://docs.google.com/document/d/13DBQuZYshTm2YwKORAwWGIEHdhcjVeivTVT-zaxaF70/edit>doc</a>.</h2>
   - when: pull_request.opened
     name: "Commit naming convention check (Jira ticket prefix)"
     validate:
@@ -34,15 +33,21 @@ mergeable:
       - do: comment
         payload:
           body: >
-            - Your commit doesn't adhere to the commit naming convention as described in the SDLC
-            - <a href=https://docs.google.com/document/d/13DBQuZYshTm2YwKORAwWGIEHdhcjVeivTVT-zaxaF70/edit>doc</a>!k.
-            - prefix each commit with relevant Jira ticket you can rebase your commit messages and force push to fix this
-  - when: pull_request.opened
-    name: "Request for review if not WIP PR"
+            :warning:
+            <h2> Jira ticket IDs missing in commits!</h2>
+            <h3>Your commit doesn't adhere to the commit naming convention</h3>
+            <ul>
+              <li>as described in the SDLC <a href=https://docs.google.com/document/d/13DBQuZYshTm2YwKORAwWGIEHdhcjVeivTVT-zaxaF70/edit>doc</a>.</li>
+              <li>prefix each commit with relevant Jira ticket you can rebase your commit messages and force push to fix this</li>
+            </ul>
+  - when: pull_request.*, pull_request_review.*
+    name: "Request for review if not a draft"
     validate:
-      - do: title
-        must_exclude:
-          regex: ^\[WIP\]
+      - do: payload
+        pull_request:
+          draft:
+            boolean:
+              match: false
     pass:
       - do: request_review
         teams: ['Android']
